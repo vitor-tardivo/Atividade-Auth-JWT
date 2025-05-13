@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Box, Typography, Avatar, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
-} from '@mui/material'
+import { Box, Typography, Avatar, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
 import axios from 'axios'
 import { useAuth } from '../utils/AuthContext'
-import api from '../utils/axiosInstance'
 
 interface Product {
     id: number
@@ -19,8 +17,15 @@ export default function ProductsPage() {
     const { token, logout } = useAuth()
 
     useEffect(() => {
-        api.get('/products').then((res) => setProducts(res.data))
+        axios.get('https://fakestoreapi.com/products', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        .then((res) => setProducts(res.data))
+        .catch((e) => console.error(`Error ao acessar /products:\n${e}`))
     }, [])
+
 
     return (
         <Box display="flex" height="100vh">

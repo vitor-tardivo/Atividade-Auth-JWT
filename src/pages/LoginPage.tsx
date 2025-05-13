@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { TextField, Button, Container, Typography, Card, CardContent, Box } from '@mui/material'
 import axios from 'axios'
 import { useAuth } from '../utils/AuthContext'
-import api from '../utils/axiosInstance'
 
 export default function LoginPage() {
     const [username, setUsername] = useState('mor_2314')
@@ -13,17 +12,17 @@ export default function LoginPage() {
 
     const handleLogin = async () => {
         try {
-        const res = await api.post('/auth/login', {
-            username,
-            password,
-        })
-        setToken(res.data.token)
-        console.log(res)
-        console.log(`Token: ${res.data.token}`)
-        navigate('/produtos')
+            const res = await axios.post('https://fakestoreapi.com/auth/login', {
+                username,
+                password,
+            })
+            setToken(res.data.token)
+            console.log(res)
+            console.log(`Token: ${res.data.token}`)
+            navigate('/produtos')
         } catch (e) {
-        alert('Login fail')
-        console.error(`Login fail:\n${e}`)
+            alert(`Error ao Logar:\n${e}`)
+            console.error(`Error ao Logar:\n${e}`)
         }
     }
 
