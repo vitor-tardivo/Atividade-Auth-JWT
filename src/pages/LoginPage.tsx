@@ -18,7 +18,7 @@ export default function LoginPage() {
             })
             setToken(res.data.token)
             console.log(res)
-            console.log(`Token: ${res.data.token}`)
+            console.log(`Token:\nBearer ${res.data.token}`)
             navigate('/produtos')
         } catch (e) {
             alert(`Error ao Logar:\n${e}`)
