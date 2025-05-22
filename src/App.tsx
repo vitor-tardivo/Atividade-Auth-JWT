@@ -27,14 +27,14 @@ export default function App() {
           }
         }}
       />
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route
+      <AuthProvider /* Fornece dados de login a toda aplicação páginas */>
+        <Routes /* Páginas */>
+          <Route path="/" element={<LoginPage />} /* Página login *//> 
+          <Route /* Página produtos */
             path="/produtos"
             element={
-              <ProtectedRoute>
-                <ProductsPage />
+              <ProtectedRoute /* Valida a entrada na pagina produtos */>
+                <ProductsPage /* Conteudo pagina produtos *//>
               </ProtectedRoute>
             }
           />

@@ -17,7 +17,7 @@ export default function ProductsPage() {
     const { token, logout } = useAuth()
 
     useEffect(() => {
-        axios.get('https://fakestoreapi.com/products', {
+        axios.get('https://fakestoreapi.com/products', {//Requesição
             headers: {
                 Authorization: `Bearer ${token}`
             }

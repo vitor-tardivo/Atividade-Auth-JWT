@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         localStorage.getItem('token')
     )
 
-    const saveToken = (newToken: string | null) => {
+    const saveToken = (newToken: string | null) => {//Salva o token no localStorage
         if (newToken) {
             localStorage.setItem('token', newToken)
         } else {

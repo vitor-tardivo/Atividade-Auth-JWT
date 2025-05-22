@@ -5,21 +5,23 @@ import axios from 'axios'
 import { useAuth } from '../utils/AuthContext'
 
 export default function LoginPage() {
-    const [username, setUsername] = useState('mor_2314')
-    const [password, setPassword] = useState('83r5^_')
+    //Dados login
+    const [username, setUsername] = useState('')//mor_2314 
+    const [password, setPassword] = useState('')//83r5^_
+    
     const { setToken } = useAuth()
     const navigate = useNavigate()
 
     const handleLogin = async () => {
         try {
-            const res = await axios.post('https://fakestoreapi.com/auth/login', {
+            const res = await axios.post('https://fakestoreapi.com/auth/login', {//Requesição
                 username,
                 password,
             })
-            setToken(res.data.token)
+            setToken(res.data.token)//Salva o Token
             console.log(res)
             console.log(`Token:\nBearer ${res.data.token}`)
-            navigate('/produtos')
+            navigate('/produtos')//Redireciona a Página produtos
         } catch (e) {
             alert(`Error ao Logar:\n${e}`)
             console.error(`Error ao Logar:\n${e}`)
