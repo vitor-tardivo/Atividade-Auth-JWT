@@ -20,6 +20,7 @@ export default function App() {
             height: '100%',
           },
           body: {
+            backgroundColor: 'rgb(195, 217, 240)',
             height: '100%',
           },
           '#root': {

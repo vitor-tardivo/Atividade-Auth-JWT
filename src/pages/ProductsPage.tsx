@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Box, Typography, Avatar, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
+import { Box, Typography, Avatar, Button, useTheme, useMediaQuery, Card, CardContent, CardMedia } from '@mui/material'
 import axios from 'axios'
 import { useAuth } from '../utils/AuthContext'
+import StoreIcon from '@mui/icons-material/Store'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 
 interface Product {
     id: number
@@ -16,6 +18,13 @@ export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([])
     const { token, logout } = useAuth()
 
+    const theme = useTheme()
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
+    useEffect(() => {
+        console.log(isMobile ? '📱 Mobile' : '🖥️ Desktop')
+    }, [isMobile])
+
     useEffect(() => {
         axios.get('https://fakestoreapi.com/products', {//Requesição
             headers: {
@@ -26,102 +35,167 @@ export default function ProductsPage() {
         .catch((e) => console.error(`Error ao acessar /products:\n${e}`))
     }, [])
 
+    const [selectedProductId, setSelectedProductId] = useState<number | null>(null)
+
+    useEffect(() => {
+    const handleClickOutside = () => setSelectedProductId(null)
+    window.addEventListener('click', handleClickOutside)
+
+    return () => {
+        window.removeEventListener('click', handleClickOutside)
+    }
+    }, [])
+
+    const userInfo = (
+        <>
+            <Avatar sx={{ width: isMobile ? '40px' : '80px', height: isMobile ? '40px' : '80px', marginBottom: '16px', color: "rgb(244, 244, 244)" }} />
+            <Typography
+            variant="h2"
+            fontWeight="bold"
+            marginBottom="16px"
+            sx={{ color: 'rgb(0, 43, 86)', fontSize: isMobile ? '1.6rem' : '2rem' }}
+            >
+            Usuario
+            </Typography>
+        </>
+    )
 
     return (
-        <Box display="flex" height="100vh">
+        <Box display="flex" height="100vh" flexDirection={isMobile ? 'column' : 'row'}>
         <Box
-            width="280px"
-            bgcolor="#f5f5f5"
-            paddingTop={'32px'}
-            paddingX={'18px'}
+            width={isMobile ? '100%' : '280px'}
+            bgcolor="rgb(244, 244, 244)"
+            paddingTop={isMobile ? '16px' : '28px'}
+            paddingX={isMobile ? '0px' : '18px'}
             display="flex"
             flexDirection="column"
             alignItems="center"
+            sx={{ 
+                boxShadow: '0px 0px 14px rgba(0, 0, 0, 0.37)',
+                border: '1px solid rgb(164, 164, 164)',
+            }}
         >
-            <Box width="100%" display="flex" flexDirection="column" alignItems="center">
-                <Avatar sx={{ width: '80px', height: '80px', marginBottom: '16px' }} />
-                <Typography variant="h2" fontWeight="bold" marginBottom={'16px'} sx={{
-                    color: '#594d6f',
-                    fontSize: '2rem'
-                }}>Username</Typography>
+            <Box width="100%" display="flex" flexDirection={isMobile ? 'row' : 'column'} alignItems="center" justifyContent={isMobile ? 'space-between' : 'center'} paddingX={'24px'} >
+                {isMobile ? (
+                    <Box display={'flex'} justifyContent={'center'} alignItems={'center'} flexDirection={'column'}>
+                        {userInfo}
+                    </Box>
+                ) : (
+                    <>
+                        {userInfo}
+                    </>
+                )}
                 <Button variant="contained" color="secondary" onClick={logout} sx={{ 
                     marginBottom: '24px',
                     fontSize: '1rem',
-                    backgroundColor: '#b388ff',
+                    borderRadius: '32px',
+                    color: "rgb(244, 244, 244)",
+                    backgroundColor: 'rgb(40, 135, 230)',
                     '&:hover': {
-                        backgroundColor: '#9c66ff'
-                    } 
+                        backgroundColor: 'rgb(0, 77, 154)'
+                    },
                 }}>
-                LOGOUT
+                DESLOGAR
                 </Button>
             </Box>
 
-            <Box width="100%" borderTop="1px solid #ddd" marginY={'24px'} />
+            <Box width="100%" borderTop="1px solid #ddd"  />
 
-            <Box width="100%" paddingLeft={'24px'}>
-                <Typography variant="subtitle2" fontWeight="bold" sx={{
+            <Box display={"flex"} width="100%" alignItems={'start'} flexDirection={isMobile ? 'row' : 'column'} gap={isMobile ? '0px' : '14px'}
+            sx={{
+                overflowX: "auto",
+                paddingX: '16px',
+                paddingY: isMobile ? '8px' : '20px'
+            }}
+            >
+                <Button fontWeight="bold" sx={{
                     cursor: 'pointer',
                     fontSize: '1.2rem',
-                    color: '#9c66ff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    color: 'rgb(0, 77, 154)',
                     '&:hover': {
-                        color: '#b388ff',
-                    } 
+                        color: 'rgb(40, 135, 230)',
+                    }, 
                 }}>
-                Produtos
-                </Typography>
+                    <StoreIcon fontSize="small" />
+                    Produtos
+                </Button>
+
+                <Button fontWeight="bold" sx={{
+                    cursor: 'pointer',
+                    fontSize: '1.2rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    color: 'rgb(0, 77, 154)',
+                    '&:hover': {
+                        color: 'rgb(40, 135, 230)',
+                    },
+                }}>
+                    <ShoppingCartIcon fontSize="small" />
+                    Carrinho
+                </Button>
             </Box>
         </Box>
 
         <Box flex={1} overflow="auto" padding={'36px'} sx={{
-                backgroundColor: '#eee8f5',
-            
+            backgroundColor: 'rgb(195, 217, 240)',
         }}>
-            <TableContainer component={Paper}>
-            <Table stickyHeader>
-                <TableHead>
-                <TableRow>
-                    <TableCell sx={{
-                        backgroundColor: '#f8f5fd',
-                        color: '#594d6f'
-                    }}>ID</TableCell>
-                    <TableCell sx={{
-                        backgroundColor: '#f8f5fd',
-                        color: '#594d6f'
-                    }}>Título</TableCell>
-                    <TableCell sx={{
-                        backgroundColor: '#f8f5fd',
-                        color: '#594d6f'
-                    }}>Preço</TableCell>
-                    <TableCell sx={{
-                        backgroundColor: '#f8f5fd',
-                        color: '#594d6f'
-                    }}>Categoria</TableCell>
-                    <TableCell sx={{
-                        backgroundColor: '#f8f5fd',
-                        color: '#594d6f'
-                    }}>Descrição</TableCell>
-                    <TableCell sx={{
-                        backgroundColor: '#f8f5fd',
-                        color: '#594d6f'
-                    }}>Imagem</TableCell>
-                </TableRow>
-                </TableHead>
-                <TableBody>
+            <Box display="grid" gap={3}  gridTemplateColumns={isMobile ? '1fr' : 'repeat(auto-fill, minmax(280px, 1fr))'}>
                 {products.map((product) => (
-                    <TableRow key={product.id}>
-                    <TableCell>{product.id}</TableCell>
-                    <TableCell>{product.title}</TableCell>
-                    <TableCell>R$ {product.price.toFixed(2)}</TableCell>
-                    <TableCell>{product.category}</TableCell>
-                    <TableCell>{product.description.slice(0, 80)}...</TableCell>
-                    <TableCell>
-                        <img src={product.image} alt={product.title} width={'50px'} />
-                    </TableCell>
-                    </TableRow>
+                <Card key={product.id} onClick={(e) => {
+                e.stopPropagation()
+                setSelectedProductId(prev => prev === product.id ? null : product.id)
+                }}
+                sx={{ display: 'flex', flexDirection: 'column', height: '100%', boxShadow: '0px 0px 14px rgba(0, 0, 0, 0.37)', border: '1px solid rgb(164, 164, 164)', cursor: 'pointer', }}>
+                    <CardMedia
+                    component="img"
+                    image={product.image}
+                    alt={product.title}
+                    sx={{
+                        padding: '12px',
+                        margin: 'auto',
+                        height: '100%',
+                        width: '200px',
+                        objectFit: 'contain',
+                    }}
+                    />
+                    <Box>
+                        <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                            <Typography variant="h6" sx={{ color: 'rgb(0, 43, 86)', }}>{product.id} - {product.title}</Typography>
+
+                            {selectedProductId === product.id && (
+                                <>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {product.description}
+                                    </Typography>
+
+                                    <Button fontWeight="bold" sx={{
+                                        cursor: 'pointer',
+                                        fontSize: '1.2rem',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px',
+                                        color: 'rgb(0, 77, 154)',
+                                        '&:hover': {
+                                            color: 'rgb(40, 135, 230)',
+                                        },
+                                    }}>
+                                        + <ShoppingCartIcon fontSize="small" />
+                                    </Button>
+                                </>
+                            )}
+
+                            <Typography fontWeight="bold" sx={{ color: 'rgb(0, 43, 86)', }}>
+                                R$ {product.price.toFixed(2)} - {product.category}
+                            </Typography>
+                        </CardContent>
+                    </Box>
+                </Card>
                 ))}
-                </TableBody>
-            </Table>
-            </TableContainer>
+            </Box>
         </Box>
         </Box>
     )
